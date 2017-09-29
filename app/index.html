@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en" :class="{pop:bodyPop}">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
+  <title>金鸡一声吼 全民喜抖擞</title>
+  <meta name="format-detection" content="telephone=no">
+  <!-- safari full screen -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta id="apple-mobile-web-app-title" name="apple-mobile-web-app-title" content="诺诺镑客">
+  <!--build:css css/index.min.css-->
+  <link rel="stylesheet" type="text/css" href="css/index.css">
+  <!--endbuild-->
+  <script>
+  //声明_czc对象:
+  var _czc = _czc || [];
+  //绑定siteid，请用您的siteid替换下方"XXXXXXXX"部分
+  _czc.push(["_setAccount", "1261065860"]);
+  </script>
+</head>
+
+<body id="app" v-cloak :class="{pop:bodyPop}">
+<div class="banner">
+    <div class="share" @click="share(1)"></div>
+    <img src="images/banner01.jpg" alt="">
+</div>
+<div class="main-wrapper"> 
+    <div class="game-item clearfix" :class="{show:initFinshed}">
+        <img class="l-1" src="images/l-1.png" alt="">
+        <img class="l-2" src="images/l-2.png" alt="">
+        <img class="l-7" src="images/l-7.png" alt="">
+        <img class="l-4" src="images/l-4.png" alt="">
+        <img class="l-5" src="images/l-5.png" alt="">
+        <img class="l-6" src="images/l-2.png" alt="">
+        <img class="l-8" src="images/l-8.png" alt="">
+        <img class="l-9" src="images/l-2.png" alt="">
+        <img class="l-10" src="images/l-3.png" alt="">
+        <img class="l-11" src="images/l-2.png" alt="">
+        <div class="chicken">
+          <img src="images/chicken.png" alt="">
+        </div>
+        <div class="start-click">
+          <div class="shaizi-start" @click="startGame()">
+            <img class="img-start" src="images/shaizi1.png" alt="" v-show="shaiziShowIndex">
+            <div class="shaizi-rot"  v-show="!shaiziShowIndex">
+              <div class="s-u" :class="{anim:isAnim,one:jumpDot==1,two:jumpDot==2,three:jumpDot==3,for:jumpDot==4}">
+                <div><img src="images/s-1.png" alt=""></div>
+                <div><img src="images/s-2.png" alt=""></div>
+                <div><img src="images/s-3.png" alt=""></div>
+                <div><img src="images/s-4.png" alt=""></div>
+                <div><img src="images/s-5.png" alt=""></div>
+                <div><img src="images/s-6.png" alt=""></div>
+              </div>
+            </div>
+          </div>
+          <div class="hand-move rota">
+            <img src="images/dian2.png" alt="">
+          </div>
+          <p>当前可用次数: <b>{{playCount}}</b> 次</p>
+        </div>
+        <span class="item-dice-dot nth{{$index+1}} fl {{item.bling}}"   v-for="item in gameArr" >
+          <b></b>
+          <img class="t"  :class="{active:item.bling,blue:item.isChangeColor==2,red:item.isChangeColor==3}" v-bind:src="item.src" alt="">
+        </span>
+        <div class="present" @click="seeList()">
+          <img  src="images/jiang.png" alt="">
+          <p>游戏奖品</p>
+        </div>
+    </div> 
+    
+    <button class="role" @click="showRole(1)">
+          活动规则  &gt;&gt;
+    </button>
+    <div class="new-year">
+      <span class="jump" v-for="item in newYear" track-by="$index" @click="goAppSet(item,$index)">
+      </span>
+    </div>
+    <div class="top-20"> 
+      <img class="top-bg" src="images/top20_01.png" alt="">
+      <div class="list-main">
+        <p><span :class="{'active':current==1}" @click="changeTab(1)">1月22日-2月2日</span><span :class="{'active':current==2}" @click="changeTab(2)">2月3日-2月13日</span></p>
+        <div class="top-infor row row-no-padding">
+          <span class="row row-no-padding col col-10">排名</span>
+          <span class="row row-no-padding col col-27">用户名</span>
+          <span class="row row-no-padding col col-25">年化投资额</span>
+          <span class="row row-no-padding col col-38">奖品</span>
+        </div>
+        <ul class="top-item infor" v-show="winnerList.length>0">
+          <li class="row row-center row-no-padding " v-for="item in winnerList" >
+            <span class="row row-no-padding col col-10">{{$index+1}}</span>
+            <span class="row row-no-padding col col-27">{{item.mobile}}</span>
+            <span class="row row-no-padding col col-25">{{item.amount}} </span>
+            <span class="row row-no-padding col col-38">{{item.prize}}</span>
+          </li>
+        </ul>
+        <div class="wait" v-show="winnerList.length == 0"><img src="images/wait.png" alt=""></div>
+      </div>
+      <span class="see-money" v-if="!userJwt" @click="seeInvestMent()">查看当前年化投资额</span>
+      <p class="mine" v-if="userJwt">我当前年化投资额：{{myInvestCount}}元</p>
+      <button class="role"  @click="showRole(2)">
+          活动规则  &gt;&gt;
+      </button>
+    </div>
+    <div class="top-main">
+      <div class="main-nuonuo">
+        <img class="top-bg" src="images/heli.png" alt="">
+        <p class="sth"><img src="images/pic01.jpg" alt=""></p>
+        <img style="margin-top:20px;" src="images/renqi01.png" alt="">
+        <div class="ren-qi">
+          <div class="top-infor row row-no-padding">
+            <span class="row row-no-padding col col-10">排名</span>
+            <span class="row row-no-padding col col-30">手机号</span>
+            <span class="row row-no-padding col col-22">好友数</span>
+            <span class="row row-no-padding col col-36">现金券（元）</span>
+          </div>
+          <ul class="top-item infor" v-show="inviteList.length>0">
+            <li class="row row-center row-no-padding" v-for="item in inviteList" >
+              <span class="row row-no-padding col col-10">{{$index+1}}</span>
+              <span class="row row-no-padding col col-30">{{item.mobile}}</span>
+              <span class="row row-no-padding col col-22">{{item.count}} </span>
+              <span class="row row-no-padding col col-36">{{item.coupon}}</span>
+            </li>
+          </ul>
+          <div class="wait" v-show="inviteList.length == 0"><img src="images/wait.png" alt=""></div>
+        </div>
+        <img style="margin-top:20px;" src="images/haoqi01.png" alt="">
+         <div class="ren-qi" style="margin-bottom: 10px;">
+          <div class="top-infor row row-no-padding">
+            <span class="row row-no-padding col col-10">排名</span>
+            <span class="row row-no-padding col col-30">手机号</span>
+            <span class="row row-no-padding col col-22">好友投资额</span>
+            <span class="row row-no-padding col col-36">现金券（元）</span>
+          </div>
+          <ul class="top-item infor" v-show="envoyList.length>0">
+            <li class="row row-center row-no-padding" v-for="item in envoyList" >
+              <span class="row row-no-padding col col-10">{{$index+1}}</span>
+              <span class="row row-no-padding col col-30">{{item.mobile}}</span>
+              <span class="row row-no-padding col col-22">{{item.amount}} </span>
+              <span class="row row-no-padding col col-36">{{item.coupon}}</span>
+            </li>
+          </ul>
+          <div class="wait" v-show="envoyList.length == 0"><img src="images/wait.png" alt=""></div>
+        </div>
+      </div>
+      <button class="role" @click="showRole(3)">
+            活动规则  &gt;&gt;
+      </button>
+    </div>
+    
+</div>
+<div class="bottom-land">
+    <img src="images/bottom.png" alt="">
+</div>
+<div class="footer" v-if="!isFromAppTrue">
+    <span>打开APP,抢豪礼</span>
+    <span @click="startDownLoad()">打开APP</span>
+</div>
+<!-- 弹框开始 -->
+<div class="pop-chose" :class="{'show':isChose}" @click="hidePop()">
+  <div class="main-pop" >
+  <span class="close" @click="isChose=false;"></span>
+    <!-- 没有次数提示 -->
+    <img src="images/no-time.png" alt="" v-show="noTime">
+    <!-- 我的奖品未获奖或者是app外打开直接点击奖品时 -->
+    <img src="images/my-jiangpin-no.png" alt="" v-show="noSpoilList">
+    <!-- 新用户5元现金提示 -->
+    <!-- <div class="new-5" v-show="new5">
+      <button @click="goCash()"></button>
+      <img class="new-5-yuan" src="images/new-5.png" alt="">
+    </div> -->
+    <!-- 奖品列表 -->
+    <div class="jiang-list" v-show="getMyList">
+      <div class="box-1">
+        <div class="show-list-box">
+          <div class="spoil-list clearfix" v-for="item in spoilArr">
+            <span class="fl">{{item.prize}}</span>
+            <span class="fl">{{item.date}}</span>
+          </div>
+        </div>
+        <p>诺币、现金券、加息券、现金红包在“我的福利”查看。净化器、iPhone7、币宝u盘抱枕活动结束后邮寄。京东卡在每个时间点短信发送。</p>
+      </div>
+    </div>
+    <!-- 注册提示 -->
+    <div class="register" v-show="register.show" @click="$event.stopPropagation();">
+      <img class="tan" src="images/tan-bg1.png"  alt="">
+      <img class="chicken-r" src="images/register.png" alt="">
+      <div class="reg-tel" @click="$event.stopPropagation();">
+        <input id="tel_reg" type="tel" maxlength="11" v-model="register.getTel" placeholder="请输入手机号" v-on:blur="loseBlur()">
+        <p class="clerfix" v-if="!register.isCurrentCap">
+          <input type="text" maxlength="4" v-model="register.getCap" :disabled="!register.getTel || register.getTel.length!=11" placeholder="图形验证码">
+          <img v-bind:src="register.captcha" alt="">
+        </p>
+        <p class="clearfix" v-if='register.isCurrentCap'>
+          <input id="numberPh" type="text" style="width:55%;"  maxlength="6" v-model="register.getNum" placeholder="短信验证码">
+          <span class="time-count" v-if="register.sendAgain" @click="sendMsgAgain()">重新发送</span>
+          <span class="time-count" v-if="!register.sendAgain">{{countdown.time}}s</span>
+        </p>
+        <button @click="submitCount()" :disabled="register.currentInput" v-bind:class="{'active':!register.currentInput}" >{{register.text}}</button>
+      </div>
+    </div>
+    <!-- 获取的奖品提示 -->
+    <div class="register get-spoil" v-show="mySpoil">
+      <img class="tan" src="images/tan-bg1.png" alt="" @click="$event.stopPropagation();">
+      <img class="chicken-r" src="images/youxiu.png" alt="">
+      <div class="spoil-u">
+        <h3>恭喜你获得{{getOnePrize}}奖品</h3>
+        <p v-if="isFromAppTrue">请在【游戏奖品】中查看，每日首次投资或分享可再获得一次机会.</p>
+        <p v-if="!isFromAppTrue">请至诺诺镑客查看，新客注册更享有366元现金.</p>
+      </div>
+      <div class="go-to row row-center row-no-padding" >
+        <p class="row col row-no-padding col-50" v-if="isFromAppTrue">
+          <button @click="goInvest()">去投资</button>
+        </p>
+        <p class="row col row-no-padding col-50" v-if="isFromAppTrue">
+          <button @click="share()">去分享</button>
+        </p>
+        <p class="row col row-no-padding col-50" style="margin-left: 25%;" v-if="!isFromAppTrue" >
+          <button @click="goCash()">去领奖</button>
+        </p>
+      </div>
+    </div>
+    <!-- app外邀请好友弹出层 -->
+    <img class="share-guid" src="images/share.png" v-show="isOutShare" alt="">  
+  </div>
+</div>
+
+ <!-- 活动规则 之游戏规则-->
+<div class="pop-role-content" :class="{'show':isChose2}" @click="hidePop()">
+<div class="close"><img src="images/close.png" alt=""></div>
+  <div class="role-content" v-show="role==1">
+    <h3>活动规则</h3>
+      1.  1月22号至2月13号，每天首次登录可获得一次免费掷骰子机会，根据掷骰子的数字前进步数；<br>
+      2.  活动期间每日首次成功分享可增加1次机会，次数当天有效；<br>
+      3.  邀请好友注册再增加1次机会，次数可叠加；<br>
+      4.  每日首次投资诺诺镑客新客、月月升、贴心计划任意产品即可获得一次掷骰子机会，次数可叠加；<br>
+      5.  活动期间您获得的所有奖励请在活动页面浮窗“我的奖励”查看，若因缓存问题无显示，请刷新后再查看；<br>
+      6.  现金红包将在您投资新客、月月升、贴心计划任意产品成功后激活，次日到余额；<br>
+      7.  获得京东电子礼品卡的用户我们将在1月27号和2月8号、14号以短信形式发送至获奖用户；<br>
+      8.  获得净化器和iPhone 7奖品的用户在活动结束后3个工作日内将收到获奖短信通知，并请在7个工作日内完善收货地址，否则取消获奖资格；<br>
+      9.  活动期间到达终点的用户可另外再获得50元现金券奖励，达到终点后可重新再参与游戏；<br>
+      10.  活动期间诺诺镑客将采取技术手段保证活动公平公正，杜绝违规操作和作弊现象，一旦发现违规操作和作弊现象，诺诺镑客将取消其参与资格和兑奖资格;<br>
+      11.  本活动最终解释权在法律允许范围内归诺诺镑客所有。
+    </div>
+    <!-- 聚豪榜活动规则 -->
+    <div class="role-content" v-show="role==2">
+    <h3>活动规则</h3>
+      1.  1月22号-2月2号，2月3号-13号两个时间段累计投资年化（含贴心、月月升，月月升按照1个月年化计算）排名前20名，可获得相应奖品；<br>
+      2.  投资年化金额相同的用户，则根据在投总额排序；<br>
+      3.  获得奖品的用户我们将在活动结束后的3个工作日内短信通知，请获奖用户在活动结束后的7个工作日内完善收货地址以便及时收到礼品；<br>
+      4.  活动最终解释权在法律允许范围内归诺诺镑客所有。
+    </div>
+    <!-- 活动规则之镑客大使 -->
+    <div class="role-content" v-show="role==3">
+    <h3>活动规则</h3>
+      1. 活动期间，邀请好友注册并投资新客专享计划、贴心计划、月月升产品，首笔投资额≥500元，您可立得15元现金券；首笔投资额≥1000元，您可立得20元现金券;<br>
+      2.  “人气榜”按邀请好友数量排名次，如数量同，依据好友累计年化投资金额确定名次； <br>
+      3. “壕气榜”按邀请好友年化投资额排名次，如金额同，按好友数确定名次； <br>
+      4.  以上排行榜计算您邀请的好友在活动期间注册并投资贴心、月月升、和新手专享产品，且累计年化投资金额≥200元； <br>
+      5. 年化投资额=投资金额×投资期限（天）÷365，月月升按30天计算； <br>
+      6. 现金券将在活动结束后3个工作日内发放，现金券均为30天有效期，可投资3-12月期贴心计划或月月升计划，可叠加使用，1000元起投。 
+    </div>
+</div>
+<audio id="bang_music" src="haha.mp3" type="audio/mp3">
+</audio>
+<div id="toastr" class="row row-center" :class="{active: toastrInfo}">
+  <p v-html="toastrInfo"></p>
+</div>
+  <script type="text/javascript" src="https://res.wx.qq.com/open/js/jweixin-1.0.0.js "></script>
+  
+  
+  <!-- build:js js/vendor.js -->
+  <!-- bower:js -->
+  <script src="/bower_components/zepto/zepto.js"></script>
+  <script src="/bower_components/vue/dist/vue.js"></script>
+  <!-- endbower -->
+  <!-- endbuild -->
+
+  <!--build:js js/main.js-->
+  <script src="js/util.js"></script>
+  <script src="js/bridge.js"></script>
+  <script src="js/index.js"></script>
+  <!--endbuild-->
+  <script type="text/javascript" src="https://m.nonobank.com/nonoutil/js/tongdun.js"></script>
+  <script>
+  var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");
+  document.write(unescape("%3Cspan style='display:none' id='cnzz_stat_icon_1261065860'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s4.cnzz.com/z_stat.php%3Fid%3D1261065860' %3E%3C/script%3E"));
+  </script>
+</body>
+
+</html>
